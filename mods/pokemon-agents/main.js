@@ -3,7 +3,7 @@
 // Click one to go to its agent; right-click to choose which of the first 151 it is.
 import { View, div, image } from "gpui-kit";
 import { h_flex, v_flex, InputState, Input } from "gpui-base";
-import { agents, spaces, theme, run, props, shared, setShared, openOverlay, closeOverlay, nextCommand } from "herdr";
+import { agents, spaces, theme, settings, run, props, shared, setShared, openOverlay, closeOverlay, nextCommand } from "herdr";
 import { NAMES, COUNT, nameOf, dexNo } from "./names.js";
 import { loadSprite, ensureIcons, iconPath, imageMagick } from "./sprites.js";
 
@@ -91,6 +91,7 @@ function matches(query) {
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const rand = (lo, hi) => lo + Math.random() * (hi - lo);
+const zoom = () => (Number(settings()?.zoom) > 0 ? Number(settings().zoom) : 1);
 
 // ---- the view -------------------------------------------------------------------
 
@@ -161,7 +162,14 @@ export default class PokemonAgents extends View {
       if (mood !== m.mood) { m.mood = mood; changed = true; }
       if (m.moving) {
         const f = clamp((now - m.start) / m.dur, 0, 1);
-        if (f >= 1) {
+        if (m.target < lo || m.target > hi) {
+          // The strip got narrower mid-walk: stop inside it instead of walking off the edge.
+          m.x = m.target = clamp(m.from + (m.target - m.from) * f, lo, hi);
+          m.moving = false;
+          m.dur = 150;
+          m.pauseUntil = now + rand(1000, 3000);
+          changed = true;
+        } else if (f >= 1) {
           m.moving = false;
           m.x = m.target;
           m.pauseUntil = now + (mood === "working" ? rand(300, 1800) : rand(4000, 12000));
@@ -224,9 +232,12 @@ export default class PokemonAgents extends View {
       .overflow_hidden()
       .bg(t.chrome)
       .on_size_change((size, cx) => {
-        if (Math.abs(size.width - this.width) > 1 || Math.abs(size.height - this.height) > 1) {
-          this.width = size.width;
-          this.height = size.height;
+        // The size comes in zoomed px, but everything here is drawn in unzoomed units.
+        const width = size.width / zoom();
+        const height = size.height / zoom();
+        if (Math.abs(width - this.width) > 1 || Math.abs(height - this.height) > 1) {
+          this.width = width;
+          this.height = height;
           cx.notify();
         }
       })
