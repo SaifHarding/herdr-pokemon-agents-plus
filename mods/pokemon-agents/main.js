@@ -74,8 +74,9 @@ function moodOf(a, tabs, now) {
   if (a.status === "blocked") return "blocked";
   if (a.status === "done") return "done";
   if (a.status === "working") return "working";
+  // changed_at is null when nothing in the tab changed since the app started: idle all along.
   const changed = tabs[a.tab]?.changed_at;
-  return changed && now - changed > SLEEP_AFTER ? "sleep" : "idle";
+  return changed == null || now - changed > SLEEP_AFTER ? "sleep" : "idle";
 }
 
 // Dex numbers whose name contains the search, or whose number starts with it ("25", "#025").

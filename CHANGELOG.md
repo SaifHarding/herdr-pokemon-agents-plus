@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.2 (2026-11-05)
+
+### Fixed
+- Idle agents fall asleep again when nothing has happened in their tab since
+  Herdr started. Herdr reports no change time for those tabs, and the strip
+  read that as "awake", so long-idle Pokémon never slept.
+
 ## v0.1.1 (2026-11-04)
 
 ### Fixed

@@ -51,6 +51,8 @@ agent; right-click it to choose which Pokémon it is.
   animation, facing the viewer slightly left or right, the way it last
   walked) between strolls. After 3 minutes without a change in its tab
   (`changed_at`), it lies down and sleeps (sleep animation + `zZz`).
+  A null `changed_at` (nothing changed since Herdr started) counts as idle
+  all along: it sleeps.
 - **blocked**: stops where it is (mid-walk too), stands, `!` bubble; its tag
   wins over neighbours.
 - **done**: stops, stands, `✓` bubble. Herdr turns `done` into `idle` once
