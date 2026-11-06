@@ -53,7 +53,8 @@ agent needs you.
   30 px). The face follows the status: `working` Determined, `blocked`
   Worried, `done` Happy, otherwise Normal. A Pokémon without that face shows
   Normal; without portraits, its Gen VII menu icon (22×16). Sub-agents keep
-  their program icon.
+  their program icon. Herdr's "Needs you" section and badge read "Waiting on
+  you".
 
 ## How it behaves
 
