@@ -1,13 +1,15 @@
 # Pokémon agents plus
 
+Built on [mathieucroset](https://github.com/mathieucroset)'s
+[herdr-pokemon-agents](https://github.com/mathieucroset/herdr-pokemon-agents): the strip, the sprites
+and the picker are his work. This version adds faces in the sidebar and cries when your agents need you.
+
+![Pokémon agents plus](preview.png)
+
 Every agent in [Herdr](https://herdr.dev) gets its own Pokémon from the first 151. They wander a
 strip along the bottom of the window: working agents walk about, idle ones stroll and nod off, and
 one that needs you stops and calls for you. Click a Pokémon to jump to its agent, right-click to
-choose which Pokémon it is.
-
-Pokémon agents plus builds on [herdr-pokemon-agents](https://github.com/mathieucroset/herdr-pokemon-agents)
-by Mathieu Croset ([mathieucroset](https://github.com/mathieucroset)). The strip, the sprites and the
-picker are his work. This version adds two things:
+choose which Pokémon it is. On top of that:
 
 - **Faces in the sidebar.** The agents list shows each agent's Pokémon portrait, and the face
   follows what the agent is doing: determined while it works, worried while it waits on you,
@@ -15,8 +17,6 @@ picker are his work. This version adds two things:
 - **Cries.** When an agent needs you, its Pokémon cries. When one finishes while you're looking
   elsewhere, you hear a softer, higher chirp of the same cry. You soon learn who's calling.
   Pikachu and Eevee use their voiced cries ("Pika!", "Vee!") rather than the original 1996 ones.
-
-![The strip along the bottom of the window](preview.png)
 
 ![The agents list while they work: each face looks determined](sidebar.png)
 ![When an agent finishes, its face turns happy](sidebar-done.png)
@@ -85,7 +85,8 @@ listens. A layout with just the sidebar list shows the faces but stays quiet.
   Apache-2.0; the licence is in that folder.
 - Pokémon and all related names are trademarks of Nintendo, Creatures and GAME FREAK. This is an
   unofficial fan mod and isn't affiliated with them.
-- `preview.png` is Mathieu's mock-up of the strip, drawn by `tools/make-preview.py`.
-  `sidebar.png` and `sidebar-done.png` are screenshots of the agents list.
+- `strip.png` is Mathieu's mock-up of the strip, drawn by `tools/make-preview.py`. `preview.png` is
+  this version's gallery image, and `sidebar.png` and `sidebar-done.png` are screenshots of the
+  agents list.
 
 The code is MIT; see [LICENSE](LICENSE).

@@ -1,17 +1,17 @@
 # Pokémon agents plus
 
-A strip along the bottom of the Herdr window where every agent is a pixel-art
-Pokémon from the first 151. Working agents walk back and forth, idle ones
-stroll and fall asleep after a while, a blocked agent stops and shows a
-pulsing "!", and a finished one shows a "✓". Click a Pokémon to jump to its
-agent; right-click it to choose which Pokémon it is. The sidebar's agents list
-shows each agent's Pokémon face, and a Pokémon cries when its agent needs you.
+Built on [mathieucroset](https://github.com/mathieucroset)'s
+[herdr-pokemon-agents](https://github.com/mathieucroset/herdr-pokemon-agents),
+whose strip, sprites and picker these are; this version adds the sidebar faces
+and the cries. A strip along the bottom of the Herdr window where every agent
+is a pixel-art Pokémon from the first 151. Working agents walk back and forth,
+idle ones stroll and fall asleep after a while, a blocked agent stops and
+shows a pulsing "!", and a finished one shows a "✓". Click a Pokémon to jump
+to its agent; right-click it to choose which Pokémon it is. The sidebar's
+agents list shows each agent's Pokémon face, and a Pokémon cries when its
+agent needs you.
 
-Built on [herdr-pokemon-agents](https://github.com/mathieucroset/herdr-pokemon-agents) by
-[mathieucroset](https://github.com/mathieucroset): the strip, sprites and picker are his; the
-sidebar faces and the cries are this version's.
-
-![Pokémon agents](preview.png)
+![Pokémon agents plus](preview.png)
 
 ## What you see
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draws preview.png for the pokemon-agents Herdr mod: a mock window, no real data."""
+"""Draws strip.png (it was preview.png) for the pokemon-agents Herdr mod: a mock window, no real data."""
 import re, subprocess, sys
 from pathlib import Path
 
