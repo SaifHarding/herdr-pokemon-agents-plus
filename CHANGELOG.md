@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.2.0 (2026-11-06), fork by SaifHarding
+## v0.2.0 (2026-11-06): Pokémon agents plus, by SaifHarding on mathieucroset's original
 
 ### New
 - Faces in the sidebar. A new mod, `pokemon-agents-list`, is Herdr's agents list with each agent's

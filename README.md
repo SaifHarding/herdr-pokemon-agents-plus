@@ -1,12 +1,13 @@
-# herdr-pokemon-agents
+# Pokémon agents plus
 
 Every agent in [Herdr](https://herdr.dev) gets its own Pokémon from the first 151. They wander a
 strip along the bottom of the window: working agents walk about, idle ones stroll and nod off, and
 one that needs you stops and calls for you. Click a Pokémon to jump to its agent, right-click to
 choose which Pokémon it is.
 
-This is a fork of [Mathieu Croset's herdr-pokemon-agents](https://github.com/mathieucroset/herdr-pokemon-agents).
-The strip, the sprites and the picker are his work. The fork adds two things:
+Pokémon agents plus builds on [herdr-pokemon-agents](https://github.com/mathieucroset/herdr-pokemon-agents)
+by Mathieu Croset ([mathieucroset](https://github.com/mathieucroset)). The strip, the sprites and the
+picker are his work. This version adds two things:
 
 - **Faces in the sidebar.** The agents list shows each agent's Pokémon portrait, and the face
   follows what the agent is doing: determined while it works, worried while it waits on you,
@@ -22,7 +23,7 @@ The strip, the sprites and the picker are his work. The fork adds two things:
 
 ## Install
 
-Ask your agent: *"add the Herdr mod at github.com/SaifHarding/herdr-pokemon-agents"*. Or by hand:
+Ask your agent: *"add the Herdr mod at github.com/SaifHarding/herdr-pokemon-agents-plus"*. Or by hand:
 
 ```sh
 cp -r mods/pokemon-agents mods/pokemon-agents-list ~/.config/herdr-app/mods/
@@ -74,7 +75,8 @@ listens. A layout with just the sidebar list shows the faces but stays quiet.
 
 ## Credits
 
-- The original mod is by [Mathieu Croset](https://github.com/mathieucroset), under MIT.
+- The original mod, [herdr-pokemon-agents](https://github.com/mathieucroset/herdr-pokemon-agents), is by
+  Mathieu Croset ([mathieucroset](https://github.com/mathieucroset)), under MIT.
 - Sprites and portraits: [PMD SpriteCollab](https://github.com/PMDCollab/SpriteCollab) by the
   PMDCollab artists, CC BY-NC 4.0 (each sprite's credits are in their repo).
 - Menu icons: [PokeAPI/sprites](https://github.com/PokeAPI/sprites).
