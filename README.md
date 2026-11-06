@@ -13,8 +13,11 @@ The strip, the sprites and the picker are his work. The fork adds two things:
   happy when it's done.
 - **Cries.** When an agent needs you, its Pokémon cries. When one finishes while you're looking
   elsewhere, you hear a softer, higher chirp of the same cry. You soon learn who's calling.
+  Pikachu says "Pika!" rather than its original 1996 cry.
 
-![Pokémon agents](preview.png)
+![The strip along the bottom of the window](preview.png)
+
+![The sidebar's agents list, with a portrait for each agent](sidebar.png)
 
 ## Install
 
@@ -79,7 +82,7 @@ listens. A layout with just the sidebar list shows the faces but stays quiet.
   Apache-2.0; the licence is in that folder.
 - Pokémon and all related names are trademarks of Nintendo, Creatures and GAME FREAK. This is an
   unofficial fan mod and isn't affiliated with them.
-- `preview.png` is Mathieu's mock-up of the strip, drawn by `tools/make-preview.py`. It doesn't
-  show the sidebar faces.
+- `preview.png` is Mathieu's mock-up of the strip, drawn by `tools/make-preview.py`.
+  `sidebar.png` is a screenshot of the agents list.
 
 The code is MIT; see [LICENSE](LICENSE).

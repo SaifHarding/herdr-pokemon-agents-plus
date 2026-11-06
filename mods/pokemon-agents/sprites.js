@@ -137,16 +137,20 @@ export async function loadSprite(id) {
 // A Pokémon's cry, as the MP3 Pokémon Showdown serves (Herdr plays MP3s), named like "mrmime".
 // Downloaded once into the data folder.
 const CRIES = "https://play.pokemonshowdown.com/audio/cries";
-export const cryPath = (id) => `${DATA_REL}/cries/${id}.mp3`;
+// Cries other than the plain one: Pikachu says "Pika!" (its Let's Go voice) rather than its 1996 cry.
+// An override caches under its own name, so an old cached cry is never played again.
+const CRY_OVERRIDES = { 25: "pikachu-starter" };
+const cryFile = (id) => (CRY_OVERRIDES[id] ? `${id}-${CRY_OVERRIDES[id]}` : String(id));
+export const cryPath = (id) => `${DATA_REL}/cries/${cryFile(id)}.mp3`;
 const cryName = (name) => name.toLowerCase().replace("♀", "f").replace("♂", "m").replace(/[^a-z0-9]/g, "");
 
 export async function ensureCry(id, name) {
   const dir = `${DATA}/cries`;
-  const out = `${dir}/${id}.mp3`;
+  const out = `${dir}/${cryFile(id)}.mp3`;
   if (await fs.exists(out).catch(() => false)) return cryPath(id);
   await fs.mkdir(dir, { recursive: true });
-  const tmp = `${dir}/${id}.part`;
-  await curl([[tmp, `${CRIES}/${cryName(name)}.mp3`]]);
+  const tmp = `${dir}/${cryFile(id)}.part`;
+  await curl([[tmp, `${CRIES}/${CRY_OVERRIDES[id] ?? cryName(name)}.mp3`]]);
   // Herdr's fs has no rename: a finished download moves into place, so a cut-off one is never played.
   const mv = await exec("mv", ["-f", tmp, out]);
   if (mv.code !== 0) throw new Error(mv.stderr.trim() || "could not save the cry");
@@ -155,15 +159,15 @@ export async function ensureCry(id, name) {
 
 // The done chirp: the cry about 30% higher (so quicker too), at half volume, fading out. Made from the
 // cached cry with ffmpeg; null when ffmpeg can't run (the caller falls back to the plain cry).
-export const chirpPath = (id) => `${DATA_REL}/cries/${id}-done.mp3`;
+export const chirpPath = (id) => `${DATA_REL}/cries/${cryFile(id)}-done.mp3`;
 
 export async function ensureChirp(id, name) {
-  const out = `${DATA}/cries/${id}-done.mp3`;
+  const out = `${DATA}/cries/${cryFile(id)}-done.mp3`;
   if (await fs.exists(out).catch(() => false)) return chirpPath(id);
   await ensureCry(id, name);
-  const tmp = `${DATA}/cries/${id}-done.part.mp3`;
+  const tmp = `${DATA}/cries/${cryFile(id)}-done.part.mp3`;
   const filter = "aresample=44100,asetrate=57330,aresample=44100,volume=0.5,afade=t=out:st=0.45:d=0.35";
-  const r = await exec("ffmpeg", ["-y", "-loglevel", "error", "-i", `${DATA}/cries/${id}.mp3`, "-af", filter,
+  const r = await exec("ffmpeg", ["-y", "-loglevel", "error", "-i", `${DATA}/cries/${cryFile(id)}.mp3`, "-af", filter,
     "-codec:a", "libmp3lame", "-q:a", "4", tmp]).catch(() => null);
   if (!r || r.code !== 0) return null;
   const mv = await exec("mv", ["-f", tmp, out]);
