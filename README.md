@@ -17,7 +17,8 @@ The strip, the sprites and the picker are his work. The fork adds two things:
 
 ![The strip along the bottom of the window](preview.png)
 
-![The sidebar's agents list, with a portrait for each agent](sidebar.png)
+![The agents list while they work: each face looks determined](sidebar.png)
+![When an agent finishes, its face turns happy](sidebar-done.png)
 
 ## Install
 
@@ -83,6 +84,6 @@ listens. A layout with just the sidebar list shows the faces but stays quiet.
 - Pokémon and all related names are trademarks of Nintendo, Creatures and GAME FREAK. This is an
   unofficial fan mod and isn't affiliated with them.
 - `preview.png` is Mathieu's mock-up of the strip, drawn by `tools/make-preview.py`.
-  `sidebar.png` is a screenshot of the agents list.
+  `sidebar.png` and `sidebar-done.png` are screenshots of the agents list.
 
 The code is MIT; see [LICENSE](LICENSE).
