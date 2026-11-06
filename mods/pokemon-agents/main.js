@@ -1,11 +1,17 @@
 // Pokémon agents: every agent is a pixel-art Pokémon roaming a strip at the bottom of the window.
 // Working ones walk around, idle ones stroll and nap, blocked ones stop and call for you.
 // Click one to go to its agent; right-click to choose which of the first 151 it is.
+// When an agent starts waiting on you (blocked), its Pokémon cries; when it finishes while you weren't
+// looking (done), it chirps (its cry, higher and softer). Point Herdr's own "blocked" and "done" sounds
+// at mods/pokemon-agents/silent.mp3 in settings.json and these are the only sounds.
+// It also fetches what the sidebar list (pokemon-agents-list) draws: PMDCollab portraits per agent
+// (shared "pokemon-agents.portraits": dex number -> the expressions it has) and, as a fallback, the
+// menu icons (shared "pokemon-agents.icons").
 import { View, div, image } from "gpui-kit";
 import { h_flex, v_flex, InputState, Input } from "gpui-base";
-import { agents, spaces, theme, settings, run, props, shared, setShared, openOverlay, closeOverlay, nextCommand } from "herdr";
+import { agents, spaces, theme, settings, run, props, shared, setShared, openOverlay, closeOverlay, nextCommand, playSound } from "herdr";
 import { NAMES, COUNT, nameOf, dexNo } from "./names.js";
-import { loadSprite, ensureIcons, iconPath, imageMagick } from "./sprites.js";
+import { loadSprite, ensureIcons, iconPath, imageMagick, ensureCry, ensureChirp, ensurePortraits } from "./sprites.js";
 
 const KEY = "pokemon-agents"; // shared state: { panes: { <pane id>: <dex number> } }
 const SLOT = 128; // width of one Pokémon's column (sprite + name tag)
@@ -13,6 +19,7 @@ const LABEL_H = 18; // name tag under the feet
 const FEET = 24; // ground line, px above the strip's bottom
 const SPEED = { working: 70, idle: 32 }; // px per second
 const SLEEP_AFTER = 3 * 60 * 1000; // idle this long: fall asleep
+const CRY_GAP = 1500; // at most one cry this often, when several agents block at once
 
 // ---- who is which Pokémon -------------------------------------------------------
 
@@ -106,6 +113,13 @@ export default class PokemonAgents extends View {
     this.sprites = {}; // dex number -> meta | "loading" | { error }
     this.hover = null;
     this.magick = null; // null: not checked yet
+    this.cries = {}; // dex number -> "loading" | { cry, chirp } | { error, at }
+    this.portraits = {}; // dex number -> "loading" | expressions | { error, at }
+    this.seen = {}; // address -> its status at the last tick (no cry for one already blocked)
+    this.cried = 0;
+    cx.spawn(async () => {
+      try { await ensureIcons(COUNT); if (!shared("pokemon-agents.icons")) setShared("pokemon-agents.icons", true); } catch {}
+    });
     cx.spawn(async (cx) => {
       this.magick = !!(await imageMagick());
       cx.notify();
@@ -139,6 +153,56 @@ export default class PokemonAgents extends View {
     });
   }
 
+  // Fetches a Pokémon's cry ahead of time, so it plays the moment its agent blocks.
+  wantCry(id, cx) {
+    const cur = this.cries[id];
+    if (cur === "loading" || cur?.cry) return;
+    if (cur?.error && Date.now() - cur.at < 60000) return;
+    this.cries[id] = "loading";
+    cx.spawn(async () => {
+      try {
+        const cry = await ensureCry(id, nameOf(id));
+        this.cries[id] = { cry, chirp: (await ensureChirp(id, nameOf(id))) ?? cry };
+      } catch (e) { this.cries[id] = { error: String(e?.message ?? e), at: Date.now() }; }
+    });
+  }
+
+  // Fetches a Pokémon's portraits and tells the sidebar which faces it has.
+  wantPortraits(id, cx) {
+    const cur = this.portraits[id];
+    if (cur === "loading" || Array.isArray(cur)) return;
+    if (cur?.error && Date.now() - cur.at < 60000) return;
+    this.portraits[id] = "loading";
+    cx.spawn(async () => {
+      try {
+        const have = await ensurePortraits(id);
+        this.portraits[id] = have;
+        const all = shared("pokemon-agents.portraits") ?? {};
+        if (JSON.stringify(all[id]) !== JSON.stringify(have)) setShared("pokemon-agents.portraits", { ...all, [id]: have });
+      } catch (e) {
+        this.portraits[id] = { error: String(e?.message ?? e), at: Date.now() };
+      }
+    });
+  }
+
+  // An agent that has just started waiting on you cries; one that just finished unseen chirps (once each).
+  cry(list, ids, now) {
+    const live = new Set();
+    for (const a of list) {
+      live.add(a.address);
+      const was = this.seen[a.address];
+      this.seen[a.address] = a.status;
+      if (was === undefined || was === a.status || (a.status !== "blocked" && a.status !== "done")) continue;
+      const sound = this.cries[ids[a.address]];
+      const path = a.status === "blocked" ? sound?.cry : sound?.chirp;
+      if (path && now - this.cried >= CRY_GAP) {
+        playSound(path);
+        this.cried = now;
+      }
+    }
+    for (const k of Object.keys(this.seen)) if (!live.has(k)) delete this.seen[k];
+  }
+
   tick(cx) {
     const now = Date.now();
     const list = agents();
@@ -146,6 +210,8 @@ export default class PokemonAgents extends View {
     const { ids, fresh } = assign(list);
     if (Object.keys(fresh).length) savePicks(fresh); // keeps new agents' Pokémon stable
     if (this.magick) for (const id of new Set(Object.values(ids))) this.want(id, cx);
+    for (const id of new Set(Object.values(ids))) { this.wantCry(id, cx); this.wantPortraits(id, cx); }
+    this.cry(list, ids, now);
 
     const lo = SLOT / 2;
     const hi = Math.max(lo, this.width - SLOT / 2);

@@ -4,7 +4,8 @@ A strip along the bottom of the Herdr window where every agent is a pixel-art
 Pokémon from the first 151. Working agents walk back and forth, idle ones
 stroll and fall asleep after a while, a blocked agent stops and shows a
 pulsing "!", and a finished one shows a "✓". Click a Pokémon to jump to its
-agent; right-click it to choose which Pokémon it is.
+agent; right-click it to choose which Pokémon it is. The sidebar's agents list
+shows each agent's Pokémon face, and a Pokémon cries when its agent needs you.
 
 ![Pokémon agents](preview.png)
 
@@ -42,6 +43,14 @@ agent; right-click it to choose which Pokémon it is.
   cells with the Gen VII menu icon (80×60), `#025` in `dim` and the name.
   The current pick has an `accent` border and `selected` background.
 
+- **The sidebar's agents list** (`pokemon-agents-list`, Herdr's `agents` mod
+  0.1.13 with one change): each agent row shows its Pokémon's PMDCollab
+  portrait, 32 px with a 7 px radius, in a 38 px row (rows without one stay
+  30 px). The face follows the status: `working` Determined, `blocked`
+  Worried, `done` Happy, otherwise Normal. A Pokémon without that face shows
+  Normal; without portraits, its Gen VII menu icon (22×16). Sub-agents keep
+  their program icon.
+
 ## How it behaves
 
 - **working**: walks. Picks a random spot at least 60 px away, faces that
@@ -64,6 +73,15 @@ agent; right-click it to choose which Pokémon it is.
   Esc closes. Search matches names and numbers (`25`, `#025`). The choice is
   saved per pane in shared state, so it survives restarts and a new agent in
   the same pane keeps the same Pokémon.
+- **Sounds**: when an agent turns `blocked`, its Pokémon's cry plays
+  (`playSound`). When it turns `done` (finished while the person wasn't
+  looking), a chirp plays: the cry with ffmpeg's
+  `aresample=44100,asetrate=57330,aresample=44100,volume=0.5,afade=t=out:st=0.45:d=0.35`
+  (30 % higher and quicker, half volume, fading out); the plain cry when
+  ffmpeg can't run. Once per change, never for an agent already blocked when
+  the strip starts, at most one sound per 1.5 s. Herdr's own sounds still
+  play unless `settings.json` points `sounds.blocked` / `sounds.done` at
+  `mods/pokemon-agents/silent.mp3` (eight empty MPEG-1 Layer III frames).
 - **New agents** get a Pokémon from a hash of their pane id, skipping ones
   already on screen, and that pick is saved at once so it never shifts.
 - **Key** (optional, `keys.json`): `alt-shift-p` → `pokemon-agents.pick`
@@ -106,8 +124,16 @@ agent; right-click it to choose which Pokémon it is.
     and store sizes and boxes in `meta.json`, written last as the "done" mark.
   - Picker icons: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-vii/icons/<id>.png`,
     all 151 in one `curl --parallel` call, then one `magick mogrify -scale 200%`.
+  - Portraits: `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait/<0025>/<Face>.png`
+    (40×40) for Normal, Determined, Worried and Happy; a 404 means that face
+    doesn't exist. `have.json` lists the ones fetched and marks it done. The
+    strip shares them as `setShared("pokemon-agents.portraits", { <dex no>: [faces] })`,
+    and `"pokemon-agents.icons": true` once the menu icons are in.
+  - Cries: `https://play.pokemonshowdown.com/audio/cries/<name>.mp3`, the name
+    lower case with ♀/♂ as f/m and everything but a–z and 0–9 dropped
+    (`nidoranf`, `mrmime`, `farfetchd`); the chirp is `<id>-done.mp3` beside it.
 - **Programs it runs**: `curl`, `magick` (or ImageMagick 6's
-  `convert` / `identify` / `mogrify`).
+  `convert` / `identify` / `mogrify`), `ffmpeg`, `mv`.
 
 ## Watch out
 
@@ -132,6 +158,13 @@ agent; right-click it to choose which Pokémon it is.
 - Tested on Linux with ImageMagick 7 and Herdr app 0.1.12; macOS and Windows
   need `curl` and ImageMagick on PATH.
 
+- Herdr's `fs/promises` has no `rename`: move a finished download into place
+  with `exec("mv")`, so a cut-off one is never played or drawn.
+- The strip and the list can't import from each other's folders; they talk
+  through shared state only. The list reads the strip's picks
+  (`"pokemon-agents".panes`), so without the strip it shows program icons.
+- The sounds play only while the strip is in the layout.
+
 ## Done when
 
 - `herdr-app check mods/pokemon-agents` passes.
@@ -147,3 +180,7 @@ agent; right-click it to choose which Pokémon it is.
   the strip shows the new Pokémon. After restarting Herdr it is still there.
 - `alt-shift-p` (with the `keys.json` snippet) opens the picker for the
   focused agent.
+- The sidebar list shows each agent's portrait, and the face changes when the
+  agent starts working, waits on you or finishes.
+- An agent that starts waiting on you makes its Pokémon cry once; one that
+  finishes in a tab you aren't looking at chirps once.

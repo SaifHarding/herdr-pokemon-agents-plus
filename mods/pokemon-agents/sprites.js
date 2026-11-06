@@ -134,6 +134,66 @@ export async function loadSprite(id) {
   return meta;
 }
 
+// A Pokémon's cry, as the MP3 Pokémon Showdown serves (Herdr plays MP3s), named like "mrmime".
+// Downloaded once into the data folder.
+const CRIES = "https://play.pokemonshowdown.com/audio/cries";
+export const cryPath = (id) => `${DATA_REL}/cries/${id}.mp3`;
+const cryName = (name) => name.toLowerCase().replace("♀", "f").replace("♂", "m").replace(/[^a-z0-9]/g, "");
+
+export async function ensureCry(id, name) {
+  const dir = `${DATA}/cries`;
+  const out = `${dir}/${id}.mp3`;
+  if (await fs.exists(out).catch(() => false)) return cryPath(id);
+  await fs.mkdir(dir, { recursive: true });
+  const tmp = `${dir}/${id}.part`;
+  await curl([[tmp, `${CRIES}/${cryName(name)}.mp3`]]);
+  // Herdr's fs has no rename: a finished download moves into place, so a cut-off one is never played.
+  const mv = await exec("mv", ["-f", tmp, out]);
+  if (mv.code !== 0) throw new Error(mv.stderr.trim() || "could not save the cry");
+  return cryPath(id);
+}
+
+// The done chirp: the cry about 30% higher (so quicker too), at half volume, fading out. Made from the
+// cached cry with ffmpeg; null when ffmpeg can't run (the caller falls back to the plain cry).
+export const chirpPath = (id) => `${DATA_REL}/cries/${id}-done.mp3`;
+
+export async function ensureChirp(id, name) {
+  const out = `${DATA}/cries/${id}-done.mp3`;
+  if (await fs.exists(out).catch(() => false)) return chirpPath(id);
+  await ensureCry(id, name);
+  const tmp = `${DATA}/cries/${id}-done.part.mp3`;
+  const filter = "aresample=44100,asetrate=57330,aresample=44100,volume=0.5,afade=t=out:st=0.45:d=0.35";
+  const r = await exec("ffmpeg", ["-y", "-loglevel", "error", "-i", `${DATA}/cries/${id}.mp3`, "-af", filter,
+    "-codec:a", "libmp3lame", "-q:a", "4", tmp]).catch(() => null);
+  if (!r || r.code !== 0) return null;
+  const mv = await exec("mv", ["-f", tmp, out]);
+  return mv.code === 0 ? chirpPath(id) : null;
+}
+
+// PMDCollab portraits (40x40 faces) for the sidebar: one per expression the agent's status uses.
+// Not every Pokémon has every expression; returns the ones it has. Cached, with have.json last.
+const PORTRAITS = "https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/portrait";
+export const EMOTIONS = ["Normal", "Determined", "Worried", "Happy"];
+export const portraitPath = (id, emotion) => `${DATA_REL}/portraits/${pad(id)}/${emotion}.png`;
+
+export async function ensurePortraits(id) {
+  const dir = `${DATA}/portraits/${pad(id)}`;
+  const haveFile = `${dir}/have.json`;
+  if (await fs.exists(haveFile).catch(() => false)) {
+    try { return JSON.parse(await fs.readFile(haveFile, "utf8")); } catch {}
+  }
+  await fs.mkdir(dir, { recursive: true });
+  const have = [];
+  for (const e of EMOTIONS) {
+    const r = await exec("curl", ["-sfL", "--retry", "2", "--connect-timeout", "10", "-o", `${dir}/${e}.png`, `${PORTRAITS}/${pad(id)}/${e}.png`]);
+    if (r.code === 0) have.push(e);
+    else if (r.code !== 22) throw new Error(`portrait download failed (curl ${r.code})`); // 22: this face doesn't exist
+  }
+  if (!have.length) throw new Error("no portraits");
+  await fs.writeFile(haveFile, JSON.stringify(have));
+  return have;
+}
+
 // The picker's menu icons (40x30, doubled when ImageMagick is there). One download for all 151.
 export const iconPath = (id) => `${DATA_REL}/icons/${id}.png`;
 

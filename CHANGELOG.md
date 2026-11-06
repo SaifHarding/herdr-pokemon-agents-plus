@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.2.0 (2026-11-06), fork by SaifHarding
+
+### New
+- Faces in the sidebar. A new mod, `pokemon-agents-list`, is Herdr's agents list with each agent's
+  PMDCollab portrait in place of its program icon. The face follows the agent: Determined while it
+  works, Worried while it waits on you, Happy when it's done, Normal otherwise. A Pokémon without
+  that face shows Normal; one without portraits shows its menu icon.
+- Cries. When an agent starts waiting on you, its Pokémon cries (an MP3 from Pokémon Showdown). When
+  it finishes while you weren't looking, it chirps: the same cry, higher and at half volume. At most
+  one sound every 1.5 s.
+- `mods/pokemon-agents/silent.mp3`, to point Herdr's own blocked and done sounds at.
+
+### Changed
+- The strip fetches the menu icons, each agent's portraits and its cry as soon as the agent turns
+  up, so they're ready before they're needed. It needs ffmpeg for the chirp.
+
 ## v0.1.2 (2026-11-05)
 
 ### Fixed
