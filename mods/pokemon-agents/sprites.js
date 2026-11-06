@@ -137,9 +137,9 @@ export async function loadSprite(id) {
 // A Pokémon's cry, as the MP3 Pokémon Showdown serves (Herdr plays MP3s), named like "mrmime".
 // Downloaded once into the data folder.
 const CRIES = "https://play.pokemonshowdown.com/audio/cries";
-// Cries other than the plain one: Pikachu says "Pika!" (its Let's Go voice) rather than its 1996 cry.
+// Cries other than the plain one: Pikachu and Eevee use their voiced Let's Go cries rather than the 1996 ones.
 // An override caches under its own name, so an old cached cry is never played again.
-const CRY_OVERRIDES = { 25: "pikachu-starter" };
+const CRY_OVERRIDES = { 25: "pikachu-starter", 133: "eevee-starter" };
 const cryFile = (id) => (CRY_OVERRIDES[id] ? `${id}-${CRY_OVERRIDES[id]}` : String(id));
 export const cryPath = (id) => `${DATA_REL}/cries/${cryFile(id)}.mp3`;
 const cryName = (name) => name.toLowerCase().replace("♀", "f").replace("♂", "m").replace(/[^a-z0-9]/g, "");

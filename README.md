@@ -13,7 +13,7 @@ The strip, the sprites and the picker are his work. The fork adds two things:
   happy when it's done.
 - **Cries.** When an agent needs you, its Pokémon cries. When one finishes while you're looking
   elsewhere, you hear a softer, higher chirp of the same cry. You soon learn who's calling.
-  Pikachu says "Pika!" rather than its original 1996 cry.
+  Pikachu and Eevee use their voiced cries ("Pika!", "Vee!") rather than the original 1996 ones.
 
 ![The strip along the bottom of the window](preview.png)
 
