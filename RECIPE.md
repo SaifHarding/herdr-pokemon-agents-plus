@@ -1,17 +1,17 @@
-# Pokémon agents plus
+# Pokemon agents plus
 
 Built on [mathieucroset](https://github.com/mathieucroset)'s
 [herdr-pokemon-agents](https://github.com/mathieucroset/herdr-pokemon-agents),
 whose strip, sprites and picker these are; this version adds the sidebar faces
 and the cries. A strip along the bottom of the Herdr window where every agent
-is a pixel-art Pokémon from the first 151. Working agents walk back and forth,
+is a pixel-art Pokemon from the first 151. Working agents walk back and forth,
 idle ones stroll and fall asleep after a while, a blocked agent stops and
-shows a pulsing "!", and a finished one shows a "✓". Click a Pokémon to jump
-to its agent; right-click it to choose which Pokémon it is. The sidebar's
-agents list shows each agent's Pokémon face, and a Pokémon cries when its
+shows a pulsing "!", and a finished one shows a "✓". Click a Pokemon to jump
+to its agent; right-click it to choose which Pokemon it is. The sidebar's
+agents list shows each agent's Pokemon face, and a Pokemon cries when its
 agent needs you.
 
-![Pokémon agents plus](preview.png)
+![Pokemon agents plus](preview.png)
 
 ## What you see
 
@@ -19,39 +19,39 @@ agent needs you.
   column (above the status bar in the default layout). Background is the
   theme's `chrome`. A 1 px `border` line runs across it 20 px above the
   bottom: the ground.
-- **One Pokémon per agent**, standing on the ground line in a 128 px wide
+- **One Pokemon per agent**, standing on the ground line in a 128 px wide
   column. Sprites come from PMD SpriteCollab sheets, pixel-doubled (2×) with
-  nearest-neighbour scaling; Pokémon whose walk frame is taller than 64 px
+  nearest-neighbour scaling; Pokemon whose walk frame is taller than 64 px
   (Onix, Gyarados, ...) are drawn at 1×. Each has a soft shadow ellipse
   (`#00000030`, 6 px tall, 70 % of the sprite's visible width) under its feet.
   The sprite is aligned by its visible pixels: feet on the ground, body
   centered on the column.
-- **A name tag** under each Pokémon, 10.5 px text in `muted` (`foreground`
+- **A name tag** under each Pokemon, 10.5 px text in `muted` (`foreground`
   when hovered or focused), preceded by a 6 px dot in the agent's status color
   (`theme().working | blocked | done | idle`). The tag is the tab's name when
   the tab was named, otherwise the space's name. Hovered, it reads
-  `<Pokémon> · <tag>`. Tags never overlap: when two would collide, the one
+  `<Pokemon> · <tag>`. Tags never overlap: when two would collide, the one
   that matters more stays (hovered > blocked > done > focused > the rest).
 - **Bubbles above the head**, 12.5 px bold white on a 7 px-rounded pill:
   `!` on `blocked` (opacity pulse 0.7 ↔ 1 every 900 ms), `✓` on `done`.
-  A sleeping Pokémon shows `z` → `zZ` → `zZz` → `zZ` in `muted`, 700 ms apart.
+  A sleeping Pokemon shows `z` → `zZ` → `zZz` → `zZ` in `muted`, 700 ms apart.
 - **While a sprite downloads**, a small Poké Ball (18 px circle, red
   `#e3350d` top, `#f4f4f4` bottom, `foreground` outline) pulses in its place.
 - **No agents**: centered 12 px `dim` text, "No agents yet. Each agent you
-  start shows up here as a Pokémon."
+  start shows up here as a Pokemon."
 - **No ImageMagick**: Poké Balls stay, and a note at the top right says
-  "Install ImageMagick (magick) to see the Pokémon".
-- **The picker** (dialog, 640×560): title "Choose a Pokémon" (15 px
-  semibold), a line "for <tag> · now <Pokémon>", a search input with an
+  "Install ImageMagick (magick) to see the Pokemon".
+- **The picker** (dialog, 640×560): title "Choose a Pokemon" (15 px
+  semibold), a line "for <tag> · now <Pokemon>", a search input with an
   `accent` border, then a scrolling grid of all 151 in Pokédex order: 92×96
   cells with the Gen VII menu icon (80×60), `#025` in `dim` and the name.
   The current pick has an `accent` border and `selected` background.
 
 - **The sidebar's agents list** (`pokemon-agents-list`, Herdr's `agents` mod
-  0.1.13 with one change): each agent row shows its Pokémon's PMDCollab
+  0.1.13 with one change): each agent row shows its Pokemon's PMDCollab
   portrait, 32 px with a 7 px radius, in a 38 px row (rows without one stay
   30 px). The face follows the status: `working` Determined, `blocked`
-  Worried, `done` Happy, otherwise Normal. A Pokémon without that face shows
+  Worried, `done` Happy, otherwise Normal. A Pokemon without that face shows
   Normal; without portraits, its Gen VII menu icon (22×16). Sub-agents keep
   their program icon. Herdr's "Needs you" section and badge read "Waiting on
   you".
@@ -73,12 +73,12 @@ agent needs you.
   the person looks at the tab.
 - **Click**: `pane.focus { pane }`: Herdr shows that agent's tab and pane
   (`agent.focus { terminal }` for a sub-agent, which has no pane).
-- **Right-click**: opens the picker for that agent. Click a Pokémon (or type
+- **Right-click**: opens the picker for that agent. Click a Pokemon (or type
   until one is left and press Enter, the input's `submit` event) to choose;
   Esc closes. Search matches names and numbers (`25`, `#025`). The choice is
   saved per pane in shared state, so it survives restarts and a new agent in
-  the same pane keeps the same Pokémon.
-- **Sounds**: when an agent turns `blocked`, its Pokémon's cry plays
+  the same pane keeps the same Pokemon.
+- **Sounds**: when an agent turns `blocked`, its Pokemon's cry plays
   (`playSound`). When it turns `done` (finished while the person wasn't
   looking), a chirp plays: the cry with ffmpeg's
   `aresample=44100,asetrate=57330,aresample=44100,volume=0.5,afade=t=out:st=0.45:d=0.35`
@@ -87,7 +87,7 @@ agent needs you.
   the strip starts, at most one sound per 1.5 s. Herdr's own sounds still
   play unless `settings.json` points `sounds.blocked` / `sounds.done` at
   `mods/pokemon-agents/silent.mp3` (eight empty MPEG-1 Layer III frames).
-- **New agents** get a Pokémon from a hash of their pane id, skipping ones
+- **New agents** get a Pokemon from a hash of their pane id, skipping ones
   already on screen, and that pick is saved at once so it never shifts.
 - **Key** (optional, `keys.json`): `alt-shift-p` → `pokemon-agents.pick`
   opens the picker for the focused agent (else the first one).
@@ -111,12 +111,12 @@ agent needs you.
   `fs/promises` (`exists`, `mkdir`, `readFile`, `writeFile`).
 - **Motion**: one `cx.timer.every(250)` that only calls `cx.notify()` when a
   walk starts or ends, a mood changes, or an agent comes or goes. Each
-  Pokémon's 128 px column is absolutely positioned with
+  Pokemon's 128 px column is absolutely positioned with
   `.transition("left", { duration: <walk time>, easing: "linear" })`, so the
   walk itself is native. Sprite frames are animated GIFs (`image()` plays
   them); bubbles use `.loop("opacity")` and `.frames()`.
 - **Art, fetched at first use** into `~/.config/herdr-app/data/pokemon-agents/`
-  (nothing Pokémon ships in the repo):
+  (nothing Pokemon ships in the repo):
   - Sprites: `https://raw.githubusercontent.com/PMDCollab/SpriteCollab/master/sprite/<0025>/`
     `AnimData.xml`, `Walk-Anim.png`, `Idle-Anim.png`, `Sleep-Anim.png` (follow
     `<CopyOf>`: some Idle animations are copies of Walk). Sheets have one
@@ -150,14 +150,14 @@ agent needs you.
 - `init(props, cx)`'s first argument isn't the overlay's props; read
   `props()` to tell the picker from the strip.
 - An agent can briefly have no `pane` when it appears: don't persist picks
-  keyed by anything but a pane id, or that agent's Pokémon will change once
+  keyed by anything but a pane id, or that agent's Pokemon will change once
   the pane shows up.
 - `transition("left")` animates from the last drawn position, so the
   element needs a stable `.id()` per agent, and a stop mid-walk must
   compute the current position (`from + (target − from) · progress`).
 - Herdr's `done` becomes `idle` as soon as the tab is seen, so the `✓` is
   short-lived on the shown tab.
-- Limits: 151 Pokémon; up to ~1 Pokémon per 128 px of width before they
+- Limits: 151 Pokemon; up to ~1 Pokemon per 128 px of width before they
   crowd (tags then hide). exec calls time out after 30 s; one sprite needs
   ~4 small downloads, and failures retry after a minute.
 - Tested on Linux with ImageMagick 7 and Herdr app 0.1.12; macOS and Windows
@@ -173,19 +173,19 @@ agent needs you.
 ## Done when
 
 - `herdr-app check mods/pokemon-agents` passes.
-- With agents running, each one has a Pokémon in the bottom strip within a
+- With agents running, each one has a Pokemon in the bottom strip within a
   few seconds of first use (Poké Balls until the art is ready); a second start
   is instant (cached).
 - A working agent walks left and right facing the way it moves; an idle one
   strolls rarely and, 3 minutes after its last change, sleeps with `zZz`.
 - An agent waiting for permission stops and shows a pulsing `!`, and its
   name tag stays visible next to a crowd.
-- Clicking a Pokémon shows its agent; right-clicking opens the picker with
+- Clicking a Pokemon shows its agent; right-clicking opens the picker with
   151 icons; searching "pika" leaves Pikachu, Enter or a click picks it, and
-  the strip shows the new Pokémon. After restarting Herdr it is still there.
+  the strip shows the new Pokemon. After restarting Herdr it is still there.
 - `alt-shift-p` (with the `keys.json` snippet) opens the picker for the
   focused agent.
 - The sidebar list shows each agent's portrait, and the face changes when the
   agent starts working, waits on you or finishes.
-- An agent that starts waiting on you makes its Pokémon cry once; one that
+- An agent that starts waiting on you makes its Pokemon cry once; one that
   finishes in a tab you aren't looking at chirps once.

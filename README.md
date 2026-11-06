@@ -1,20 +1,20 @@
-# Pokémon agents plus
+# Pokemon agents plus
 
 Built on [mathieucroset](https://github.com/mathieucroset)'s
 [herdr-pokemon-agents](https://github.com/mathieucroset/herdr-pokemon-agents): the strip, the sprites
 and the picker are his work. This version adds faces in the sidebar and cries when your agents need you.
 
-![Pokémon agents plus](preview.png)
+![Pokemon agents plus](preview.png)
 
-Every agent in [Herdr](https://herdr.dev) gets its own Pokémon from the first 151. They wander a
+Every agent in [Herdr](https://herdr.dev) gets its own Pokemon from the first 151. They wander a
 strip along the bottom of the window: working agents walk about, idle ones stroll and nod off, and
-one that needs you stops and calls for you. Click a Pokémon to jump to its agent, right-click to
-choose which Pokémon it is. On top of that:
+one that needs you stops and calls for you. Click a Pokemon to jump to its agent, right-click to
+choose which Pokemon it is. On top of that:
 
-- **Faces in the sidebar.** The agents list shows each agent's Pokémon portrait, and the face
+- **Faces in the sidebar.** The agents list shows each agent's Pokemon portrait, and the face
   follows what the agent is doing: determined while it works, worried while it waits on you,
   happy when it's done.
-- **Cries.** When an agent needs you, its Pokémon cries. When one finishes while you're looking
+- **Cries.** When an agent needs you, its Pokemon cries. When one finishes while you're looking
   elsewhere, you hear a softer, higher chirp of the same cry. You soon learn who's calling.
   Pikachu and Eevee use their voiced cries ("Pika!", "Vee!") rather than the original 1996 ones.
 
@@ -40,7 +40,7 @@ Then make two changes to your layout. Herdr's own layouts are read-only, so clon
 2. Swap the sidebar's agents list for this one: change `"mod": "agents"` to
    `"mod": "pokemon-agents-list"`.
 
-To hear only the Pokémon, point Herdr's own alert sounds at the silent file that comes with the
+To hear only the Pokemon, point Herdr's own alert sounds at the silent file that comes with the
 mod, in `~/.config/herdr-app/settings.json`:
 
 ```json
@@ -51,9 +51,9 @@ mod, in `~/.config/herdr-app/settings.json`:
 }
 ```
 
-Leave that out and you'll hear Herdr's sound and the Pokémon together.
+Leave that out and you'll hear Herdr's sound and the Pokemon together.
 
-There's an optional key too: merge [keys.json](keys.json) and `alt-shift-p` picks a Pokémon for
+There's an optional key too: merge [keys.json](keys.json) and `alt-shift-p` picks a Pokemon for
 the focused agent.
 
 You'll need `curl` and [ImageMagick](https://imagemagick.org) on your PATH, and
@@ -61,7 +61,7 @@ You'll need `curl` and [ImageMagick](https://imagemagick.org) on your PATH, and
 
 ## What it downloads
 
-Nothing Pokémon is in this repo. The first time a Pokémon turns up, the mod fetches what it needs
+Nothing Pokemon is in this repo. The first time a Pokemon turns up, the mod fetches what it needs
 into `~/.config/herdr-app/data/pokemon-agents/` and keeps it there:
 
 - walking sprites and portraits from PMDCollab's SpriteCollab, on raw.githubusercontent.com
@@ -80,7 +80,7 @@ listens. A layout with just the sidebar list shows the faces but stays quiet.
 - Sprites and portraits: [PMD SpriteCollab](https://github.com/PMDCollab/SpriteCollab) by the
   PMDCollab artists, CC BY-NC 4.0 (each sprite's credits are in their repo).
 - Menu icons: [PokeAPI/sprites](https://github.com/PokeAPI/sprites).
-- Cries: [Pokémon Showdown](https://pokemonshowdown.com)'s audio files.
+- Cries: [Pokemon Showdown](https://pokemonshowdown.com)'s audio files.
 - `mods/pokemon-agents-list` is Herdr's own agents list with the portraits added. Herdr's mods are
   Apache-2.0; the licence is in that folder.
 - Pokémon and all related names are trademarks of Nintendo, Creatures and GAME FREAK. This is an

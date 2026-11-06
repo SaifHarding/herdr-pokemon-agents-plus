@@ -1,13 +1,13 @@
 # Changelog
 
-## v0.2.0 (2026-11-06): Pokémon agents plus, by SaifHarding on mathieucroset's original
+## v0.2.0 (2026-11-06): Pokemon agents plus, by SaifHarding on mathieucroset's original
 
 ### New
 - Faces in the sidebar. A new mod, `pokemon-agents-list`, is Herdr's agents list with each agent's
   PMDCollab portrait in place of its program icon. The face follows the agent: Determined while it
-  works, Worried while it waits on you, Happy when it's done, Normal otherwise. A Pokémon without
+  works, Worried while it waits on you, Happy when it's done, Normal otherwise. A Pokemon without
   that face shows Normal; one without portraits shows its menu icon.
-- Cries. When an agent starts waiting on you, its Pokémon cries (an MP3 from Pokémon Showdown). When
+- Cries. When an agent starts waiting on you, its Pokemon cries (an MP3 from Pokemon Showdown). When
   it finishes while you weren't looking, it chirps: the same cry, higher and at half volume. At most
   one sound every 1.5 s. Pikachu and Eevee use their voiced Let's Go cries rather than the 1996 ones.
 - `mods/pokemon-agents/silent.mp3`, to point Herdr's own blocked and done sounds at.
